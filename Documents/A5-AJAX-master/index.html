@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+
+  <body>
+    <h1>Movie List!</h1>
+
+    <h2>Search for a movie:</h2>
+    <form onsubmit="return false;">
+    <input type="text" id="find">
+    <input type="submit" onclick="search();">
+    </form>
+    
+    <h2>Add a movie to the list:</h2>
+    <form onsubmit="return false;">
+    <input type="text" id="build">
+    <input type="submit" onclick="populate();">
+    </form>
+
+    <h2>Remove a movie from the list:</h2>
+    <form onsubmit="return false;">
+    <input type="text" id="cut">
+    <input type="submit" onclick="depopulate();">
+    </form>
+
+    <div id="movies"> </div>
+
+  </body>
+
+  <script>
+  makeGet('/list');
+
+  function populate() {
+    var el = document.getElementById('build');
+
+    var reqp = new XMLHttpRequest();
+    reqp.open('POST', '/add', true);
+    reqp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    reqp.onload = function () {
+     makeGet('/list');
+    };
+
+    reqp.send('movie='+el.value);
+  }
+
+  function depopulate() {
+    var el = document.getElementById('cut');
+
+    var reqp = new XMLHttpRequest();
+    reqp.open('POST', '/remove', true);
+    reqp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    reqp.onload = function () {
+     makeGet('/list');
+    };
+
+    reqp.send('movie='+el.value);
+  }
+
+  function search() {
+    var el = document.getElementById('find');
+
+    var reqp = new XMLHttpRequest();
+    reqp.open('POST', '/search', true);
+    reqp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    reqp.onload = function () {
+     makeGet('/filter');
+    };
+
+    reqp.send('movie='+el.value);
+  }
+
+  function makeGet(url) {
+   var req = new XMLHttpRequest();
+
+    req.onreadystatechange = function() {
+     handleRes(req);
+    }
+
+    req.open('GET', url, true);
+    req.send();
+  }
+
+  function handleRes(req) {
+   if( req.readyState !== XMLHttpRequest.DONE )
+     return;
+
+    if(req.status === 200)
+     buildList( JSON.parse(req.responseText) );
+  }
+
+  function buildList( A ) {
+    var el = document.getElementById('movies');
+    el.innerHTML = "";
+    A.forEach( function(d) {
+     el.innerHTML += '<p>' + d + '</p>';
+    });
+  }
+
+  </script>
+</html>
+

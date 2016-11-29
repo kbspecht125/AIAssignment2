@@ -1,0 +1,22 @@
+/* We added some default styles. Feel free to change them */
+body
+{
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 26;
+  text-align: center;
+  color: blue;
+}
+
+body > article
+{
+  text-align: center;
+}
+
+h1
+{
+  margin: 10px 0;
+  font-style: italic;
+  color: red;
+  text-align: center;
+  font-size: 40;
+}
